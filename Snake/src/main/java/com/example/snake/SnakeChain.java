@@ -8,7 +8,7 @@ public class SnakeChain {
 
     public SnakeChain() {
         this.back = null;
-        this.front = new SnakeSegment(15, 15, null);
+        this.front = new SnakeSegment(10, 10, null);
         size = 1;
         currentDirection = Direction.UP;
     }
@@ -42,25 +42,25 @@ public class SnakeChain {
         switch(currentDirection) {
             case UP:
                 front.changeYPos(front.getYPos() - 1);
-                if (front.getYPos() > 29 || front.getYPos() < 0) {
+                if (front.getYPos() > 19 || front.getYPos() < 0) {
                     movePossible = false;
                 }
                 break;
             case DOWN:
                 front.changeYPos(front.getYPos() + 1);
-                if (front.getYPos() > 29 || front.getYPos() < 0) {
+                if (front.getYPos() > 19 || front.getYPos() < 0) {
                     movePossible = false;
                 }
                 break;
             case LEFT:
                 front.changeXPos(front.getXPos() - 1);
-                if (front.getXPos() > 29 || front.getXPos() < 0) {
+                if (front.getXPos() > 19 || front.getXPos() < 0) {
                     movePossible = false;
                 }
                 break;
             case RIGHT:
                 front.changeXPos(front.getXPos() + 1);
-                if (front.getXPos() > 29 || front.getXPos() < 0) {
+                if (front.getXPos() > 19 || front.getXPos() < 0) {
                     movePossible = false;
                 }
                 break;
@@ -102,7 +102,7 @@ public class SnakeChain {
                     newSegment = new SnakeSegment(back.getXPos() - 1, back.getYPos(), back);
                 }
             } else if (nextFromBack.getXPos() < back.getXPos()) {
-                if (back.getXPos() == 29) {
+                if (back.getXPos() == 19) {
                     if (back.getYPos() == 0) {
                         newSegment = new SnakeSegment(back.getXPos(), back.getYPos() + 1, back);
                     } else {
@@ -122,7 +122,7 @@ public class SnakeChain {
                     newSegment = new SnakeSegment(back.getXPos(), back.getYPos() - 1, back);
                 }
             } else {
-                if (back.getYPos() == 29) {
+                if (back.getYPos() == 19) {
                     if (back.getXPos() == 0) {
                         newSegment = new SnakeSegment(back.getXPos() + 1, back.getYPos(), back);
                     } else {

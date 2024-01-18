@@ -1,5 +1,4 @@
 package com.example.snake;
-
 import javafx.application.Application;
 import java.io.IOException;
 import javafx.stage.Stage;
@@ -23,6 +22,7 @@ import javafx.util.Duration;
 public class SnakeFrontend extends Application {
 
     private Timeline timeline;
+    private boolean changedDirection = false;
 
     public void start(Stage stage) throws IOException {
         //Start screen
@@ -44,45 +44,58 @@ public class SnakeFrontend extends Application {
         GridPane gameGrid = game.createGrid();
         Text scoreCounter = new Text("Score: " + game.getScore());
         scoreCounter.setFont(new Font(30));
+        Text currentHighScore = new Text("Hello");
+        try {
+            currentHighScore.setText("High Score: " + game.updateHighScore());
+        } catch (IOException e) {
+            System.out.println("IOException");
+        }
+        currentHighScore.setFont(new Font(20));
         scoreCounter.setFill(Color.BLACK);
         gameScreen.setAlignment(Pos.CENTER);
         gameGrid.setAlignment(Pos.CENTER);
-        gameScreen.getChildren().addAll(scoreCounter, gameGrid);
+        gameScreen.getChildren().addAll(scoreCounter, gameGrid, currentHighScore);
         gameScreen.setSpacing(20.0);
-        Scene gameScene = new Scene(gameScreen, 800, 800);
+        Scene gameScene = new Scene(gameScreen, 600, 600);
 
         gameScene.setOnKeyPressed(e -> {
-            switch(e.getCode()) {
-                case UP:
-                    if (game.getDirection() == Direction.DOWN) {
+            if (!changedDirection) {
+                switch(e.getCode()) {
+                    case UP:
+                        if (game.getDirection() == Direction.DOWN) {
+                            break;
+                        }
+                        changedDirection = true;
+                        game.changeDirection(Direction.UP);
                         break;
-                    }
-                    game.changeDirection(Direction.UP);
-                    break;
-                case DOWN:
-                    if (game.getDirection() == Direction.UP) {
+                    case DOWN:
+                        if (game.getDirection() == Direction.UP) {
+                            break;
+                        }
+                        changedDirection = true;
+                        game.changeDirection(Direction.DOWN);
                         break;
-                    }
-                    game.changeDirection(Direction.DOWN);
-                    break;
-                case LEFT:
-                    if (game.getDirection() == Direction.RIGHT) {
+                    case LEFT:
+                        if (game.getDirection() == Direction.RIGHT) {
+                            break;
+                        }
+                        changedDirection = true;
+                        game.changeDirection(Direction.LEFT);
                         break;
-                    }
-                    game.changeDirection(Direction.LEFT);
-                    break;
-                case RIGHT:
-                    if (game.getDirection() == Direction.LEFT) {
+                    case RIGHT:
+                        if (game.getDirection() == Direction.LEFT) {
+                            break;
+                        }
+                        changedDirection = true;
+                        game.changeDirection(Direction.RIGHT);
                         break;
-                    }
-                    game.changeDirection(Direction.RIGHT);
-                    break;
+                }
             }
         });
 
         VBox endResult = new VBox();
         Text endResultText1;
-        if (game.getScore() == 900) {
+        if (game.getScore() == 400) {
             endResultText1 = new Text("You won!");
         } else {
             endResultText1 = new Text("You died!");
@@ -97,6 +110,7 @@ public class SnakeFrontend extends Application {
             stage.setScene(startScene);
         });
         endResult.getChildren().addAll(endResultText1, endResultText2, playAgain);
+        endResult.setSpacing(20.0);
         Scene endScene = new Scene(endResult, 500, 500);
 
         startButton.setOnAction(e -> {
@@ -105,8 +119,14 @@ public class SnakeFrontend extends Application {
             timeline = new Timeline(new KeyFrame(Duration.seconds(0.09), event -> {
                 if (game.isGameStillGoing()) {
                     game.snakeMove();
+                    changedDirection = false;
                     scoreCounter.setText("Score: " + game.getScore());
                 } else {
+                    try {
+                        currentHighScore.setText("High Score: " + game.updateHighScore());
+                    } catch (IOException ex) {
+                        System.out.println("IOException");
+                    }
                     endResultText2.setText("Your score was " + game.getScore());
                     stage.setScene(endScene);
                     timeline.stop();
@@ -116,8 +136,5 @@ public class SnakeFrontend extends Application {
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
         });
-
-
-
     }
 }
